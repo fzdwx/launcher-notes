@@ -30,7 +30,7 @@ md.use(await Shikiji({
     }
 }))
 
-md.use(attach())
+md.use(attach)
 
 export default () => {
     const [value, setValue] = useState("");

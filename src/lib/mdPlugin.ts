@@ -1,9 +1,7 @@
 import MarkdownIt from "markdown-it";
 
-export const attach = () => {
-    return (m: MarkdownIt) => {
-        hackLink(m)
-    }
+export const attach = (m: MarkdownIt) => {
+    hackLink(m)
 }
 
 const hackLink = (m: MarkdownIt) => {
