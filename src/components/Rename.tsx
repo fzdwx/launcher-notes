@@ -23,6 +23,13 @@ export const Rename = ({open, setOpened, noteId, filename, onOk}: RenameProps) =
         }
         return onOk(noteId, filename)
     }
+
+    useEffect(() => {
+        if (open) {
+            inputRef.current?.focus()
+        }
+    }, [open])
+
     return <Modal
         title="修改名称"
         open={open}
