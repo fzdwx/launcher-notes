@@ -1,10 +1,10 @@
-import {Action, Background, Container, Footer} from "launcher-api";
+import {Action, Background, Container, Footer, getActionCommand} from "launcher-api";
 import {useEffect, useRef, useState} from "react";
 import {useKeyPress, useRequest, useVirtualList} from "ahooks";
 import MarkdownIt from 'markdown-it'
 import Shikiji from 'markdown-it-shikiji'
 import {NotesStore} from "./notes.api.ts";
-import {Note, Notes} from "./types.ts";
+import {actions, Note, Notes} from "./types.ts";
 import {usePointerMovedSinceMount} from "launcher-api/dist/command/utils";
 import {NewFile} from "./components/NewFile.tsx";
 import {Input, Modal} from "antd";
@@ -61,14 +61,20 @@ export default () => {
         manual: false
     });
 
+    const newNote = async () => {
+        const note = noteStore.buildStore(new Date().toLocaleDateString("zh-CN"))
+        await noteStore.addNote(note)
+        return load()
+    }
+
     const load = async () => {
         const notes = await noteStore.getNotes()
         setNotes(notes)
         const notesIds = Object.keys(notes.notes)
+
+
         if (notesIds.length === 0) {
-            const note = noteStore.buildStore(new Date().toLocaleDateString("zh-CN"))
-            await noteStore.addNote(note)
-            return load()
+            return await newNote();
         } else if (notesIds.length > 0) {
             const note = notes.notes[notesIds[0]]
             if (activeNoteId === '-1' && note) {
@@ -79,6 +85,10 @@ export default () => {
 
     useEffect(() => {
         load()
+        const action = getActionCommand()
+        if (actions.newNote === action) {
+            newNote()
+        }
     }, [])
 
     useEffect(() => {

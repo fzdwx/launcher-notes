@@ -61,3 +61,7 @@ export class Note {
     createTime: number;
     tags: string[];
 }
+
+export const actions = {
+    newNote: 'newNote',
+}
