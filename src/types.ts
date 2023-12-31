@@ -49,3 +49,16 @@ export interface Owner {
     type: string;
     site_admin: boolean;
 }
+
+export class Notes {
+    notes: Record<string, Note>; // id -> note
+}
+
+export class Note {
+    id: string;
+    filename: string;
+    content: string;
+    editTime: number;
+    createTime: number;
+    tags: string[];
+}

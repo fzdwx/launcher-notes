@@ -21,11 +21,14 @@ dependencies:
     specifier: ^2.6.1
     version: 2.6.1(@types/react@18.2.46)(react@18.2.0)
   launcher-api:
-    specifier: ^0.8.19
-    version: 0.8.19(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.8.21
+    version: 0.8.21(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
   markdown-it:
     specifier: ^14.0.0
     version: 14.0.0
+  nanoid:
+    specifier: ^5.0.4
+    version: 5.0.4
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2759,8 +2762,8 @@ packages:
     resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
     dev: false
 
-  /launcher-api@0.8.19(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-jNFx2p+dEHIgfLFQ9I6grYYeaSX3VWxsm11tsE8lRa1EXadPRzVZHT8gnV8E+FDROx1M6My7zWaUhh0emux5MQ==}
+  /launcher-api@0.8.21(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-q9BFBhVRjmtuXoVKpP7G4MXw0B/iwt/vaDJztJDRCoMpHvr7svkIniiVeUFAELpY47lr/OfFK7j5AvFKksnSCw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -2924,6 +2927,12 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /nanoid@5.0.4:
+    resolution: {integrity: sha512-vAjmBf13gsmhXSgBrtIclinISzFFy22WwCYoyilZlsrRXNIHSwgFQ1bEdjRwMT3aoadeIF6HMuDRlOxzfXV8ig==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    dev: false
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
