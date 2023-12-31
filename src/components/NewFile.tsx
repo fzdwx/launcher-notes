@@ -1,17 +1,18 @@
 import {Button, Input, Modal, Space} from 'antd';
 import {useEffect, useMemo, useRef, useState} from "react";
-import {addNote, newNote} from "../notes.api.ts";
+import {NotesStore} from "../notes.api.ts";
 import {Note} from "../types.ts";
 
 interface NewFileProps {
     open: boolean;
+    notesStore: NotesStore
     filename: string
     afterSave: (note: Note) => Promise<void>
     setOpened: (opened: boolean) => void
     title?: string;
 }
 
-export const NewFile = ({open, title, filename, afterSave,setOpened}: NewFileProps) => {
+export const NewFile = ({open, title, notesStore, filename, afterSave,setOpened}: NewFileProps) => {
     if (!open){
         return <></>
     }
@@ -33,8 +34,8 @@ export const NewFile = ({open, title, filename, afterSave,setOpened}: NewFilePro
             return
         }
         setValue("")
-        const note = newNote(filename)
-        await addNote(note)
+        const note = notesStore.buildStore(filename)
+        await notesStore.addNote(note)
         if (afterSave) {
             return afterSave(note)
         }

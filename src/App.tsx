@@ -3,7 +3,7 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import {useKeyPress, useRequest, useVirtualList} from "ahooks";
 import MarkdownIt from 'markdown-it'
 import Shikiji from 'markdown-it-shikiji'
-import {addNote, getNoteContent, getNotes, newNote, saveNotes, updateNoteContent} from "./notes.api.ts";
+import {NotesStore} from "./notes.api.ts";
 import {Note, Notes} from "./types.ts";
 import {usePointerMovedSinceMount} from "launcher-api/dist/command/utils";
 import {NewFile} from "./components/NewFile.tsx";
@@ -38,6 +38,7 @@ export default () => {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([])
     const [activeNoteId, setActiveNoteId] = useState<string>('-1')
+    const noteStore = NotesStore.create()
 
     const togglePreview = () => {
         setPreviewMode(!previewMode)
@@ -47,9 +48,9 @@ export default () => {
         if (activeNoteId === "-1") {
             return
         }
-        await updateNoteContent(activeNoteId, value)
+        await noteStore.updateNoteContent(activeNoteId, value)
         notes.notes[activeNoteId].editTime = Date.now()
-        await saveNotes(notes)
+        await noteStore.saveNotes(notes)
     }
 
     const {run} = useRequest(saveNote, {
@@ -58,12 +59,12 @@ export default () => {
     });
 
     const load = async () => {
-        const notes = await getNotes()
+        const notes = await noteStore.getNotes()
         setNotes(notes)
         const notesIds = Object.keys(notes.notes)
         if (notesIds.length === 0) {
-            const note = newNote(new Date().toLocaleDateString("zh-CN"))
-            await addNote(note)
+            const note = noteStore.buildStore(new Date().toLocaleDateString("zh-CN"))
+            await noteStore.addNote(note)
             return load()
         } else if (notesIds.length > 0) {
             const note = notes.notes[notesIds[0]]
@@ -96,7 +97,7 @@ export default () => {
 
     useEffect(() => {
         if (activeNoteId != '-1' && currentNotes.length > 0) {
-            getNoteContent(activeNoteId).then((content) => {
+            noteStore.getNoteContent(activeNoteId).then((content) => {
                 setValue(content)
             })
         }
@@ -161,7 +162,7 @@ export default () => {
                     {
                         previewMode ?
                             <div
-                                className='p-10px markdown-body w-full h-[calc(100%-30px)] max-h-[calc(100%-30px)]'
+                                className='p-10px markdown-body w-full h-[calc(100%-30px)] max-h-[calc(100%-30px)] overflow-y-scroll'
                                 dangerouslySetInnerHTML={{__html: md.render(value)}}/>
                             : <></>
                     }
@@ -171,7 +172,7 @@ export default () => {
                         ref={textRef}
                         spellCheck={false}
                         className={["p-20px w-full h-[calc(100%-30px)] max-h-[calc(100%-30px)]",
-                            previewMode ? "invisible" :
+                            previewMode ? "hidden" :
                                 "outline-none border-solid rounded-xl resize-none border-dark/30 shadow bg-transparent"].join(" ")}
                         value={value}
                         onChange={(e) => {
@@ -211,6 +212,7 @@ export default () => {
                 </Footer>
 
                 <NewFile
+                    notesStore={noteStore}
                     afterSave={async (note) => {
                         await load();
                         setActiveNoteId(note.id);
@@ -233,7 +235,7 @@ export default () => {
                             return
                         }
                         notes.notes[noteId].filename = newFilename
-                        await saveNotes(notes)
+                        await noteStore.saveNotes(notes)
                         await load()
                     }}
                 />
