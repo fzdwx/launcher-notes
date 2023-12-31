@@ -1,21 +1,25 @@
 import {config, trim} from "launcher-api";
-import {NoteMeta, Notes} from "./types.ts";
+import {Note, Notes} from "./types.ts";
 import {nanoid} from "nanoid";
 
 export const getNotes = async () => {
     const notes = trim(await config.get("launcher-notes.json"));
     if (notes.length === 0) {
         return {
-            noteMetas: {}
+            notes: {}
         } as Notes;
     }
 
     return JSON.parse(notes) as Notes;
 }
 
-export const addNote = async (note: NoteMeta) => {
+export const saveNotes = async (notes: Notes) => {
+    await config.set("launcher-notes.json", JSON.stringify(notes));
+}
+
+export const addNote = async (note: Note) => {
     const notes = await getNotes();
-    notes.noteMetas[note.id] = note;
+    notes.notes[note.id] = note;
     await config.set("launcher-notes.json", JSON.stringify(notes));
 }
 
@@ -33,5 +37,5 @@ export const newNote = (filename: string) => {
         filename,
         editTime: Date.now(),
         createTime: Date.now(),
-    } as NoteMeta
+    } as Note
 }

@@ -1,11 +1,15 @@
-import {Background, Container, Footer} from "launcher-api";
-import {useEffect, useRef, useState} from "react";
+import {Action, ActionImpl, Background, Container, Footer} from "launcher-api";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {useKeyPress, useRequest, useVirtualList} from "ahooks";
 import MarkdownIt from 'markdown-it'
 import Shikiji from 'markdown-it-shikiji'
-import {getNoteContent, getNotes, updateNoteContent} from "./notes.api.ts";
+import {addNote, getNoteContent, getNotes, newNote, saveNotes, updateNoteContent} from "./notes.api.ts";
 import {Note, Notes} from "./types.ts";
 import {usePointerMovedSinceMount} from "launcher-api/dist/command/utils";
+import {NewFile} from "./components/NewFile.tsx";
+import {Input, Modal} from "antd";
+
+const {confirm} = Modal;
 
 const Icon = () => {
     return <img className='w-5' src="/logo.svg" alt='logo'/>
@@ -43,6 +47,8 @@ export default () => {
             return
         }
         await updateNoteContent(activeNoteId, value)
+        notes.notes[activeNoteId].editTime = Date.now()
+        await saveNotes(notes)
     }
 
     const {run} = useRequest(saveNote, {
@@ -53,9 +59,16 @@ export default () => {
     const load = async () => {
         const notes = await getNotes()
         setNotes(notes)
-        if (notes && notes.notes) {
-            const note = notes.notes[Object.keys(notes.notes)[0]]
-            setActiveNoteId(note.id)
+        const notesIds = Object.keys(notes.notes)
+        if (notesIds.length === 0) {
+            const note = newNote(new Date().toLocaleDateString("zh-CN"))
+            await addNote(note)
+            return load()
+        } else if (notesIds.length > 0) {
+            const note = notes.notes[notesIds[0]]
+            if (activeNoteId === '-1' && note) {
+                setActiveNoteId(note.id)
+            }
         }
     }
 
@@ -74,7 +87,9 @@ export default () => {
             const currentNotes = Object.keys(notes.notes).map((key) => {
                 return notes.notes[key]
             })
-            setCurrentNotes(currentNotes)
+            setCurrentNotes(currentNotes.sort((a, b) => {
+                return b.editTime - a.editTime
+            }))
         }
     }, [notes]);
 
@@ -89,6 +104,10 @@ export default () => {
     useKeyPress('ctrl.p', () => {
         togglePreview()
     })
+
+
+    const [filename, setFilename] = useState<string>('')
+    const [newFileModal, setNewFileModal] = useState(false)
 
     const [virtualNotes] = useVirtualList(currentNotes, {
         containerTarget: containerRef,
@@ -122,7 +141,7 @@ export default () => {
                                     ].join(" ")}
                                     {...handlers}
                                 >
-                                    <div className='text-md'>{data.filename} {index}</div>
+                                    <div className='text-md'>{data.filename}</div>
                                 </div>
                             })}
                         </div>
@@ -157,7 +176,7 @@ export default () => {
 
             <div className='h-40px'>
                 <Footer
-                    current={""}
+                    current={null}
                     icon={<Icon/>}
                     onSubCommandHide={() => {
                         textRef.current?.focus()
@@ -165,14 +184,36 @@ export default () => {
                     onSubCommandShow={() => {
                         textRef.current?.blur()
                     }}
-                    actions={() => []}
+                    actions={(_, changeVisible) => [
+                        {
+                            id: "new-note",
+                            name: "New Note",
+                            icon: <Icon/>,
+                            perform: () => {
+                                setFilename("")
+                                setNewFileModal(true)
+                            }
+                        } as Action
+                    ]}
                     content={() => <div className='command-open-trigger'>
                         <span className='mr-1' onClick={togglePreview}>Toggle preview</span>
                         <kbd>ctrl</kbd>
                         <kbd>p</kbd>
                     </div>}>
-
                 </Footer>
+
+                <NewFile
+                    afterSave={async (note) => {
+                        await load();
+                        setActiveNoteId(note.id);
+                        textRef.current?.focus();
+                        setFilename("")
+                    }}
+                    filename={filename}
+                    open={newFileModal}
+                    setOpened={setNewFileModal}
+                    title="请输入文件名"
+                />
             </div>
         </Background>
     </Container>
