@@ -1,9 +1,9 @@
 import {Background, Container, Footer} from "launcher-api";
 import {useEffect, useRef, useState} from "react";
-import {useKeyPress, useVirtualList} from "ahooks";
+import {useKeyPress, useRequest, useVirtualList} from "ahooks";
 import MarkdownIt from 'markdown-it'
 import Shikiji from 'markdown-it-shikiji'
-import {addNote, getNotes, newNote} from "./notes.api.ts";
+import {getNoteContent, getNotes, updateNoteContent} from "./notes.api.ts";
 import {Note, Notes} from "./types.ts";
 import {usePointerMovedSinceMount} from "launcher-api/dist/command/utils";
 
@@ -32,18 +32,30 @@ export default () => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([])
-    const [activeIndex, setActiveIndex] = useState<number>(-1)
+    const [activeNoteId, setActiveNoteId] = useState<string>('-1')
 
     const togglePreview = () => {
         setPreviewMode(!previewMode)
     }
 
+    const saveNote = async () => {
+        if (activeNoteId === "-1") {
+            return
+        }
+        await updateNoteContent(activeNoteId, value)
+    }
+
+    const {run} = useRequest(saveNote, {
+        debounceWait: 100,
+        manual: false
+    });
+
     const load = async () => {
         const notes = await getNotes()
         setNotes(notes)
         if (notes && notes.notes) {
-            const note = Object.keys(notes.notes)[0]
-            setActiveIndex(0)
+            const note = notes.notes[Object.keys(notes.notes)[0]]
+            setActiveNoteId(note.id)
         }
     }
 
@@ -67,10 +79,12 @@ export default () => {
     }, [notes]);
 
     useEffect(() => {
-        if (activeIndex >= 0 && currentNotes.length > 0) {
-            setValue(currentNotes[activeIndex].content)
+        if (activeNoteId != '-1' && currentNotes.length > 0) {
+            getNoteContent(activeNoteId).then((content) => {
+                setValue(content)
+            })
         }
-    }, [activeIndex, currentNotes])
+    }, [activeNoteId, currentNotes])
 
     useKeyPress('ctrl.p', () => {
         togglePreview()
@@ -92,14 +106,14 @@ export default () => {
                     <div ref={containerRef} className='h-full'>
                         <div ref={wrapperRef}>
                             {virtualNotes.map(({data, index}) => {
-                                const active = activeIndex === index
+                                const active = activeNoteId === data.id
                                 const handlers = typeof data !== "string" && {
                                     onPointerMove: () =>
                                         pointerMoved &&
-                                        activeIndex !== index &&
-                                        setActiveIndex(index),
-                                    onPointerDown: () => setActiveIndex(index),
-                                    onClick: () => setActiveIndex(index),
+                                        activeNoteId !== data.id &&
+                                        setActiveNoteId(data.id),
+                                    onPointerDown: () => setActiveNoteId(data.id),
+                                    onClick: () => setActiveNoteId(data.id),
                                 };
 
                                 return <div
@@ -135,11 +149,11 @@ export default () => {
                         value={value}
                         onChange={(e) => {
                             setValue(e.target.value)
+                            run()
                         }}/>
 
                 </div>
             </div>
-
 
             <div className='h-40px'>
                 <Footer

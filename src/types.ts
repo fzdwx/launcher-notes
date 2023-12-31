@@ -57,7 +57,6 @@ export class Notes {
 export class Note {
     id: string;
     filename: string;
-    content: string;
     editTime: number;
     createTime: number;
     tags: string[];
