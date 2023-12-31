@@ -12,6 +12,10 @@ interface NewFileProps {
 }
 
 export const NewFile = ({open, title, filename, afterSave,setOpened}: NewFileProps) => {
+    if (!open){
+        return <></>
+    }
+
     const currentTitle = useMemo(() => {
         return title ?? "输入文件名"
     }, [title])

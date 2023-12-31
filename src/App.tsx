@@ -8,6 +8,7 @@ import {Note, Notes} from "./types.ts";
 import {usePointerMovedSinceMount} from "launcher-api/dist/command/utils";
 import {NewFile} from "./components/NewFile.tsx";
 import {Input, Modal} from "antd";
+import {Rename} from "./components/Rename.tsx";
 
 const {confirm} = Modal;
 
@@ -108,6 +109,7 @@ export default () => {
 
     const [filename, setFilename] = useState<string>('')
     const [newFileModal, setNewFileModal] = useState(false)
+    const [renameModal, setRenameModal] = useState(false)
 
     const [virtualNotes] = useVirtualList(currentNotes, {
         containerTarget: containerRef,
@@ -132,7 +134,11 @@ export default () => {
                                         activeNoteId !== data.id &&
                                         setActiveNoteId(data.id),
                                     onPointerDown: () => setActiveNoteId(data.id),
-                                    onClick: () => setActiveNoteId(data.id),
+                                    onClick: () => {
+                                        setActiveNoteId(data.id)
+                                        setFilename(data.filename)
+                                        setRenameModal(true)
+                                    },
                                 };
 
                                 return <div
@@ -213,6 +219,21 @@ export default () => {
                     open={newFileModal}
                     setOpened={setNewFileModal}
                     title="请输入文件名"
+                />
+
+                <Rename
+                    filename={filename}
+                    open={renameModal}
+                    setOpened={setRenameModal}
+                    noteId={activeNoteId}
+                    onOk={async (noteId, newFilename) => {
+                        if (notes.notes[noteId].filename === newFilename) {
+                            return
+                        }
+                        notes.notes[noteId].filename = newFilename
+                        await saveNotes(notes)
+                        await load()
+                    }}
                 />
             </div>
         </Background>
