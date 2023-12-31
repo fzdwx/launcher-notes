@@ -128,9 +128,11 @@ export default () => {
                         <div ref={wrapperRef}>
                             {virtualNotes.map(({data, index}) => {
                                 const active = activeNoteId === data.id
+                                const notModals = !newFileModal && !renameModal
                                 const handlers = typeof data !== "string" && {
                                     onPointerMove: () =>
                                         pointerMoved &&
+                                        notModals &&
                                         activeNoteId !== data.id &&
                                         setActiveNoteId(data.id),
                                     onPointerDown: () => setActiveNoteId(data.id),
