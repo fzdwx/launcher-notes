@@ -40,14 +40,14 @@
         --color-canvas-subtle: #161b22;
         --color-border-default: #30363d;
         --color-border-muted: #21262d;
-        --color-neutral-muted: rgba(110,118,129,0.4);
+        --color-neutral-muted: rgba(110, 118, 129, 0.4);
         --color-accent-fg: #2f81f7;
         --color-accent-emphasis: #1f6feb;
         --color-success-fg: #3fb950;
         --color-success-emphasis: #238636;
         --color-attention-fg: #d29922;
         --color-attention-emphasis: #9e6a03;
-        --color-attention-subtle: rgba(187,128,9,0.15);
+        --color-attention-subtle: rgba(187, 128, 9, 0.15);
         --color-danger-fg: #f85149;
         --color-danger-emphasis: #da3633;
         --color-done-fg: #a371f7;
@@ -96,8 +96,8 @@
         --color-canvas-default: #ffffff;
         --color-canvas-subtle: #f6f8fa;
         --color-border-default: #d0d7de;
-        --color-border-muted: hsla(210,18%,87%,1);
-        --color-neutral-muted: rgba(175,184,193,0.2);
+        --color-border-muted: hsla(210, 18%, 87%, 1);
+        --color-neutral-muted: rgba(175, 184, 193, 0.2);
         --color-accent-fg: #0969da;
         --color-accent-emphasis: #0969da;
         --color-success-fg: #1a7f37;
@@ -116,9 +116,9 @@
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     margin: 0;
-    color: var(--color-fg-default);
+    color: vr(--color-fg-default);
     background-color: var(--color-canvas-default);
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     font-size: 16px;
     line-height: 1.5;
     word-wrap: break-word;
@@ -164,6 +164,14 @@
     color: var(--color-accent-fg);
     text-decoration: none;
 }
+
+.markdown-body .a {
+    background-color: transparent;
+    color: var(--color-accent-fg);
+    text-decoration: none;
+    cursor: pointer;
+}
+
 
 .markdown-body abbr[title] {
     border-bottom: none;
@@ -326,7 +334,7 @@
     cursor: pointer;
 }
 
-.markdown-body details:not([open])>*:not(summary) {
+.markdown-body details:not([open]) > *:not(summary) {
     display: none !important;
 }
 
@@ -367,7 +375,7 @@
 .markdown-body kbd {
     display: inline-block;
     padding: 3px 5px;
-    font: 11px ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+    font: 11px ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
     line-height: 10px;
     color: var(--color-fg-default);
     vertical-align: middle;
@@ -456,14 +464,14 @@
 .markdown-body tt,
 .markdown-body code,
 .markdown-body samp {
-    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
     font-size: 12px;
 }
 
 .markdown-body pre {
     margin-top: 0;
     margin-bottom: 0;
-    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
     font-size: 12px;
     word-wrap: normal;
 }
@@ -497,11 +505,11 @@
     content: "";
 }
 
-.markdown-body>*:first-child {
+.markdown-body > *:first-child {
     margin-top: 0 !important;
 }
 
-.markdown-body>*:last-child {
+.markdown-body > *:last-child {
     margin-bottom: 0 !important;
 }
 
@@ -537,11 +545,11 @@
     margin-bottom: 16px;
 }
 
-.markdown-body blockquote>:first-child {
+.markdown-body blockquote > :first-child {
     margin-top: 0;
 }
 
-.markdown-body blockquote>:last-child {
+.markdown-body blockquote > :last-child {
     margin-bottom: 0;
 }
 
@@ -640,7 +648,7 @@
     list-style-type: decimal;
 }
 
-.markdown-body div>ol:not([type]) {
+.markdown-body div > ol:not([type]) {
     list-style-type: decimal;
 }
 
@@ -652,11 +660,11 @@
     margin-bottom: 0;
 }
 
-.markdown-body li>p {
+.markdown-body li > p {
     margin-top: 16px;
 }
 
-.markdown-body li+li {
+.markdown-body li + li {
     margin-top: .25em;
 }
 
@@ -687,7 +695,7 @@
     border: 1px solid var(--color-border-default);
 }
 
-.markdown-body table td>:last-child {
+.markdown-body table td > :last-child {
     margin-bottom: 0;
 }
 
@@ -723,7 +731,7 @@
     overflow: hidden;
 }
 
-.markdown-body span.frame>span {
+.markdown-body span.frame > span {
     display: block;
     float: left;
     width: auto;
@@ -751,7 +759,7 @@
     clear: both;
 }
 
-.markdown-body span.align-center>span {
+.markdown-body span.align-center > span {
     display: block;
     margin: 13px auto 0;
     overflow: hidden;
@@ -769,7 +777,7 @@
     clear: both;
 }
 
-.markdown-body span.align-right>span {
+.markdown-body span.align-right > span {
     display: block;
     margin: 13px 0 0;
     overflow: hidden;
@@ -799,7 +807,7 @@
     overflow: hidden;
 }
 
-.markdown-body span.float-right>span {
+.markdown-body span.float-right > span {
     display: block;
     margin: 13px auto 0;
     overflow: hidden;
@@ -833,7 +841,7 @@
     font-size: 100%;
 }
 
-.markdown-body pre>code {
+.markdown-body pre > code {
     padding: 0;
     margin: 0;
     word-break: normal;
@@ -1073,7 +1081,7 @@
 .markdown-body g-emoji {
     display: inline-block;
     min-width: 1ch;
-    font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 1em;
     font-style: normal !important;
     font-weight: var(--base-text-weight-normal, 400);
@@ -1098,7 +1106,7 @@
     cursor: pointer;
 }
 
-.markdown-body .task-list-item+.task-list-item {
+.markdown-body .task-list-item + .task-list-item {
     margin-top: 4px;
 }
 
@@ -1139,11 +1147,11 @@
     border-left: .25em solid var(--color-border-default);
 }
 
-.markdown-body .markdown-alert>:first-child {
+.markdown-body .markdown-alert > :first-child {
     margin-top: 0;
 }
 
-.markdown-body .markdown-alert>:last-child {
+.markdown-body .markdown-alert > :last-child {
     margin-bottom: 0;
 }
 

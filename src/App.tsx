@@ -1,5 +1,5 @@
-import {Action, ActionImpl, Background, Container, Footer} from "launcher-api";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {Action, Background, Container, Footer} from "launcher-api";
+import {useEffect, useRef, useState} from "react";
 import {useKeyPress, useRequest, useVirtualList} from "ahooks";
 import MarkdownIt from 'markdown-it'
 import Shikiji from 'markdown-it-shikiji'
@@ -9,6 +9,7 @@ import {usePointerMovedSinceMount} from "launcher-api/dist/command/utils";
 import {NewFile} from "./components/NewFile.tsx";
 import {Input, Modal} from "antd";
 import {Rename} from "./components/Rename.tsx";
+import {attach} from "./lib/mdPlugin.ts";
 
 const {confirm} = Modal;
 
@@ -28,6 +29,8 @@ md.use(await Shikiji({
         dark: 'github-dark',
     }
 }))
+
+md.use(attach())
 
 export default () => {
     const [value, setValue] = useState("");
