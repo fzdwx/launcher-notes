@@ -7,5 +7,8 @@ export default defineConfig({
     server: {
         port: 35678,
     },
+    build: {
+        target: 'esnext',
+    },
     plugins: [react(), UnoCSS(),],
 })
