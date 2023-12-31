@@ -64,7 +64,8 @@ export default () => {
     const newNote = async () => {
         const note = noteStore.buildStore(new Date().toLocaleDateString("zh-CN"))
         await noteStore.addNote(note)
-        return load()
+        await load()
+        return note.id
     }
 
     const load = async () => {
@@ -84,11 +85,16 @@ export default () => {
     }
 
     useEffect(() => {
-        load()
-        const action = getActionCommand()
-        if (actions.newNote === action) {
-            newNote()
+        async function init() {
+            await load()
+            const action = getActionCommand()
+            if (actions.newNote === action) {
+                const id = await newNote()
+                setActiveNoteId(id)
+            }
         }
+
+        init()
     }, [])
 
     useEffect(() => {
