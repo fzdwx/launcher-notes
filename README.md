@@ -8,3 +8,16 @@ A simple note extension that supports markdown.
 
 you should install [ray](https://github.com/fzdwx/launcher/blob/main/launcher-native/cmd/ray/main.go) and
 run `ray assets init`
+
+### CHANGELOG
+
+#### 24/01/01
+
+1. support upload image( have to
+   install [ray](https://github.com/fzdwx/launcher/blob/main/launcher-native/cmd/ray/main.go) )
+
+#### 23/12/31
+
+1. support render markdown
+2. new note
+3. rename note
