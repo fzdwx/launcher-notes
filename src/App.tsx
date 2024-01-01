@@ -154,9 +154,10 @@ export default () => {
             setCurrentNotes(currentNotes.sort((a, b) => {
                 return b.editTime - a.editTime
             }))
-        }
-        if (activeNoteId === '-1' && currentNotes.length > 0) {
-            setActiveNoteId(currentNotes[0].id)
+
+            if (activeNoteId === '-1' && currentNotes.length > 0) {
+                setActiveNoteId(currentNotes[0].id)
+            }
         }
     }, [notes]);
 
