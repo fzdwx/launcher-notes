@@ -74,10 +74,10 @@ export default () => {
         if (notesIds.length === 0) {
             return await newNote();
         } else if (notesIds.length > 0) {
-            const note = notes.notes[notesIds[0]]
-            if (activeNoteId === '-1' && note) {
-                setActiveNoteId(note.id)
-            }
+            // const note = notes.notes[notesIds[0]]
+            // if (activeNoteId === '-1' && note) {
+            //     setActiveNoteId(note.id)
+            // }
         }
     }
 
@@ -154,6 +154,9 @@ export default () => {
             setCurrentNotes(currentNotes.sort((a, b) => {
                 return b.editTime - a.editTime
             }))
+        }
+        if (activeNoteId === '-1' && currentNotes.length > 0) {
+            setActiveNoteId(currentNotes[0].id)
         }
     }, [notes]);
 
