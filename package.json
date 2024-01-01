@@ -14,7 +14,7 @@
     "cmdk": "^0.2.0",
     "javascript-time-ago": "^2.5.9",
     "jotai": "^2.6.1",
-    "launcher-api": "^0.8.22",
+    "launcher-api": "^0.8.27",
     "markdown-it": "^14.0.0",
     "nanoid": "^5.0.4",
     "react": "^18.2.0",

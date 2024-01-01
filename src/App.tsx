@@ -1,4 +1,4 @@
-import {Action, Background, Container, Footer, getActionCommand} from "launcher-api";
+import {Action, Background, Container, Footer, getActionCommand, assets} from "launcher-api";
 import {useEffect, useRef, useState} from "react";
 import {useKeyPress, useRequest, useVirtualList} from "ahooks";
 import MarkdownIt from 'markdown-it'
@@ -7,11 +7,8 @@ import {NotesStore} from "./notes.api.ts";
 import {actions, Note, Notes} from "./types.ts";
 import {usePointerMovedSinceMount} from "launcher-api/dist/command/utils";
 import {NewFile} from "./components/NewFile.tsx";
-import {Input, Modal} from "antd";
 import {Rename} from "./components/Rename.tsx";
 import {attach} from "./lib/mdPlugin.ts";
-
-const {confirm} = Modal;
 
 const Icon = () => {
     return <img className='w-5' src="/logo.svg" alt='logo'/>
@@ -83,6 +80,52 @@ export default () => {
             }
         }
     }
+
+    useEffect(() => {
+        let shouldUploadAssets = false
+        assets.config().then((cfg) => {
+            if (cfg === 'true') {
+                shouldUploadAssets = true
+            }
+        })
+
+        async function handler(e: ClipboardEvent) {
+            if (!shouldUploadAssets) {
+                return
+            }
+
+            const items = e.clipboardData.items
+            const filterItems = Array.from(items).filter((item) => {
+                return item.type.indexOf('image') !== -1
+            })
+            if (filterItems.length === 0) {
+                return
+            }
+            e.preventDefault()
+            e.stopPropagation()
+
+            for (const item of filterItems) {
+                const f = item.getAsFile()
+                const buf = await f.arrayBuffer()
+                const base64 = btoa(
+                    new Uint8Array(buf)
+                        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+                );
+                const resp = await assets.upload(base64)
+                setValue((v) => `${v}\n![${f.name}](${resp.url})`)
+            }
+        }
+
+        window.addEventListener('paste', handler)
+
+        return () => {
+            window.removeEventListener('paste', handler)
+        }
+    }, []);
+
+    useEffect(() => {
+        run()
+    }, [value])
 
     useEffect(() => {
         async function init() {
@@ -196,7 +239,6 @@ export default () => {
                         value={value}
                         onChange={(e) => {
                             setValue(e.target.value)
-                            run()
                         }}/>
 
                 </div>
