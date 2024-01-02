@@ -12,8 +12,8 @@ interface NewFileProps {
     title?: string;
 }
 
-export const NewFile = ({open, title, notesStore, filename, afterSave,setOpened}: NewFileProps) => {
-    if (!open){
+export const NewFile = ({open, title, notesStore, filename, afterSave, setOpened}: NewFileProps) => {
+    if (!open) {
         return <></>
     }
 
@@ -50,7 +50,7 @@ export const NewFile = ({open, title, notesStore, filename, afterSave,setOpened}
             setOpened(false)
             return add(value)
         }}
-        onCancel={()=>{
+        onCancel={() => {
             return setOpened(false)
         }}
     >

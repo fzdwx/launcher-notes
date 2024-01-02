@@ -197,13 +197,14 @@ export default () => {
                                 const active = activeNoteId === data.id
                                 const notModals = !newFileModal && !renameModal
                                 const handlers = typeof data !== "string" && {
-                                    onPointerMove: () =>
+                                    onClick: () =>{
                                         pointerMoved &&
                                         notModals &&
                                         activeNoteId !== data.id &&
-                                        setActiveNoteId(data.id),
-                                    onPointerDown: () => setActiveNoteId(data.id),
-                                    onClick: () => {
+                                        setActiveNoteId(data.id)
+                                        textRef.current?.focus()
+                                    },
+                                    onDoubleClick: () => {
                                         setActiveNoteId(data.id)
                                         setFilename(data.filename)
                                         setRenameModal(true)

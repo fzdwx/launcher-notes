@@ -11,6 +11,12 @@ run `ray assets init`
 
 ### CHANGELOG
 
+#### 24/01/02
+
+1. Update file list event handler
+   - a. click file to open
+   - b. double click file to rename
+
 #### 24/01/01
 
 1. support upload image( have to
