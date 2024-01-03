@@ -34,6 +34,7 @@ export default () => {
     const [previewMode, setPreviewMode] = useState(false)
     const [notes, setNotes] = useState<Notes>()
     const textRef = useRef<HTMLTextAreaElement | null>(null);
+    const [textActive, setTextActive] = useState<boolean>(true)
     const containerRef = useRef<HTMLDivElement | null>(null);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([])
@@ -118,8 +119,20 @@ export default () => {
 
         window.addEventListener('paste', handler)
 
+        let focusHandle = () => {
+            setTextActive(true)
+        };
+        textRef.current?.addEventListener('focus', focusHandle)
+
+        let blurHandle = () => {
+            setTextActive(false)
+        };
+        textRef.current?.addEventListener('blur', blurHandle)
+
         return () => {
             window.removeEventListener('paste', handler)
+            textRef.current?.removeEventListener('focus', focusHandle)
+            textRef.current?.removeEventListener('blur', blurHandle)
         }
     }, []);
 
@@ -173,6 +186,14 @@ export default () => {
         togglePreview()
     })
 
+    useKeyPress('tab', (e) => {
+        if (!textActive) {
+            return
+        }
+        setValue((v) => v + '    ')
+        e.preventDefault()
+        e.stopPropagation()
+    })
 
     const [filename, setFilename] = useState<string>('')
     const [newFileModal, setNewFileModal] = useState(false)
@@ -197,7 +218,7 @@ export default () => {
                                 const active = activeNoteId === data.id
                                 const notModals = !newFileModal && !renameModal
                                 const handlers = typeof data !== "string" && {
-                                    onClick: () =>{
+                                    onClick: () => {
                                         pointerMoved &&
                                         notModals &&
                                         activeNoteId !== data.id &&
@@ -254,10 +275,12 @@ export default () => {
                     current={null}
                     icon={<Icon/>}
                     onSubCommandHide={() => {
+                        textRef.current?.removeAttribute('disabled')
                         textRef.current?.focus()
                     }}
                     onSubCommandShow={() => {
                         textRef.current?.blur()
+                        textRef.current?.setAttribute('disabled', 'disabled')
                     }}
                     actions={(_, changeVisible) => [
                         {
