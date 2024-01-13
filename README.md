@@ -4,6 +4,24 @@ A simple note extension that supports markdown.
 
 ![show](https://github.com/fzdwx/launcher-notes/assets/65269574/9ad1d867-dee4-4e56-bc2e-9ff4accfae97)
 
+### Install
+
+```shell
+ray ext local install -o -i '{
+    "name": "Notes",
+    "description": "A markdown note extension",
+    "author": "fzdwx",
+    "icon": "https://raw.githubusercontent.com/fzdwx/launcher-notes/main/public/logo.svg",
+    "github": "https://github.com/fzdwx/launcher-notes",
+    "actions": [
+      {
+        "name": "New note",
+        "command": "newNote"
+      }
+    ]
+}'
+```
+
 ### Upload image
 
 you should install [ray](https://github.com/fzdwx/launcher/blob/main/launcher-native/cmd/ray/main.go) and
